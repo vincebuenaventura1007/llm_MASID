@@ -9,7 +9,7 @@ API_KEY = "secretkey"
 API_KEY_CREDITS = {API_KEY: 10}  # Set initial credits
 
 # Use your Cloudflare Tunnel URL to connect to local Ollama
-OLLAMA_SERVER_URL = "https://atmosphere-unavailable-pharmaceutical-crawford.trycloudflare.com/api/generate"
+OLLAMA_SERVER_URL = "https://genealogy-telecom-pest-mb.trycloudflare.com/api/generate"
 
 app = Flask(__name__)  # Create Flask app instance
 
