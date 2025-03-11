@@ -1,1 +1,1 @@
-web: gunicorn app:app --bind 0.0.0.0:8082
+web: gunicorn llm:app --bind 0.0.0.0:8082
