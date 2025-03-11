@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-import ollama
+import requests
 import os
 
 # Define API key directly in the script
@@ -7,6 +7,9 @@ API_KEY = "secretkey"
 
 # Dictionary to store API keys and credits
 API_KEY_CREDITS = {API_KEY: 10}  # Set initial credits
+
+# Use your Cloudflare Tunnel URL to connect to local Ollama
+OLLAMA_SERVER_URL = "https://atmosphere-unavailable-pharmaceutical-crawford.trycloudflare.com/api/generate"
 
 app = Flask(__name__)  # Create Flask app instance
 
@@ -35,17 +38,16 @@ def generate():
     API_KEY_CREDITS[x_api_key] -= 1
 
     try:
-        response = ollama.chat(
-            model="mistral-7b-instruct-v0.3_masid-v1-q4_k_m:latest",
-            messages=[{"role": "user", "content": prompt}]
-        )
+        response = requests.post(OLLAMA_SERVER_URL, json={"model": "mistral-7b-instruct-v0.3_masid-v1-q4_k_m:latest", "prompt": prompt})
+        result = response.json()
+
         return jsonify({
-            "response": response["message"]["content"],
+            "response": result.get("message", {}).get("content", ""),
             "credits_remaining": API_KEY_CREDITS[x_api_key]
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Explicitly bind to port 8082
+    port = int(os.environ.get("PORT", 5000))  # Explicitly bind to port 8082 for Railway
     app.run(debug=True, host="0.0.0.0", port=port)
